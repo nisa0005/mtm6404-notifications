@@ -1,32 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import notificationsData from './notifications'
 import './App.css'
 
+function NotificationWrapper({ children }) {
+  return (
+    <div className='notification-wrapper'>
+      {children}
+    </div>
+  )
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [notifications, setNotifications] = useState(notificationsData)
+
+  const clearAll = () => {
+    setNotifications([])
+  }
+
+  const clearIndividual = (id) => {
+    setNotifications(notifications.filter((notif) => notif.id !== id))
+  }
+
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+
+      <h1> {notifications.length} Notifications </h1>
+
+      <button onClick={clearAll}>
+        Clear All
+      </button>
+      
+      {notifications.map((notification) => (
+        <NotificationWrapper key={notification.id}>
+          <h2>{notification.name}</h2>
+          <p>{notification.message}</p>
+          <button onClick={() => clearIndividual(notification.id)}>Clear</button>
+        </NotificationWrapper>
+      ))}
+
     </div>
   )
 }
